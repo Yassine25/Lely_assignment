@@ -1,4 +1,6 @@
 import datetime
+import json
+from urllib.request import urlopen
 
 from Repository import Repository
 
@@ -37,4 +39,11 @@ class ImportHandler:
                 date_times.clear()
             index += 1
 
-
+    @staticmethod
+    def get_json_data(url):
+        try:
+            response = urlopen(url)
+            return json.loads(response.read())
+        except Exception as ex:
+            print(ex)
+            return None
