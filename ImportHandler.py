@@ -31,13 +31,27 @@ class ImportHandler:
                 for j in range(index + 1, len(pull_requests) - i):
                     second_date = getattr(pull_requests[j], 'date_time')
                     if datetime.date(first_date) == datetime.date(second_date):
-                        print("same dates", first_date, second_date)
                         date_times.append(first_date)
                         date_times.append(second_date)
 
                 ImportHandler.calculate_average_duration(date_times)
                 date_times.clear()
             index += 1
+
+    # this method calculates the average duration of pull requests grouped by dates of the same date
+    @staticmethod
+    def calculate_average_duration(date_times):
+        sorted_date_times = sorted(date_times)
+        for i in sorted_date_times:
+            print("ss", sorted_date_times[i])
+        duration = 0
+        avg = 0
+        for i in range(0, len(sorted_date_times) - 1):
+            start = int(round(datetime.strptime(str(sorted_date_times[i]), "%Y-%m-%d %H:%M:%S").timestamp()))
+            end = int(round(datetime.strptime(str(sorted_date_times[i + 1]), "%Y-%m-%d %H:%M:%S").timestamp()))
+            duration += end - start
+        avg = duration / (len(sorted_date_times) - 1)
+        return avg
 
     @staticmethod
     def get_json_data(url):
