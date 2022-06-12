@@ -77,15 +77,12 @@ class ImportHandler:
     @staticmethod
     def calculate_average_duration(date_times):
         sorted_date_times = sorted(date_times)
-        for i in sorted_date_times:
-            print("ss", sorted_date_times[i])
         duration = 0
         avg = 0
         for i in range(0, len(sorted_date_times) - 1):
             start = int(round(datetime.strptime(str(sorted_date_times[i]), "%Y-%m-%d %H:%M:%S").timestamp()))
             end = int(round(datetime.strptime(str(sorted_date_times[i + 1]), "%Y-%m-%d %H:%M:%S").timestamp()))
             duration += end - start
-            print("duration = ", duration)
         avg = duration / (len(sorted_date_times) - 1)
         return avg
 
