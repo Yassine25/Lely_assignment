@@ -36,7 +36,7 @@ class ImportHandler:
                                            datetime.strptime(pull_request_data['created_at'], '%Y-%m-%dT%H:%M:%Sz'))
                 repository.pull_requests.append(pull_request)
 
-            if len(repository.pull_requests) > 0:
+            if len(repository.pull_requests) > 1:
                 ImportHandler.handle_calculation_average_duration(repository)
             else:
                 print("no pull requests available for this repository")
@@ -69,9 +69,11 @@ class ImportHandler:
             index += 1
 
         if (avg_duration / 60) > 3600:
-            print("avg duration for repository {0}, in hours = {1}".format(repository.name, avg_duration / 3600))
+            print(str.format("avg duration for repository {0}, in hours = {1}").format(repository.name,
+                                                                                       avg_duration / 3600))
         elif (avg_duration / 60) < 3600:
-            print("avg duration for repository {0}, in minutes = {1}".format(repository.name, avg_duration / 60))
+            print(str.format("avg duration for repository {0}, in minutes = {1}").format(repository.name,
+                                                                                         avg_duration / 60))
 
     # this method calculates the average duration of pull requests grouped by dates of the same date
     @staticmethod
