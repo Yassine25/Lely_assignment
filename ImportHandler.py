@@ -43,7 +43,7 @@ class ImportHandler:
 
     # this method is part of the calculation of the average duration of pull requests
     # average duration of pull requests will be only calculated if there are more than one pull request
-    # for the same date. the end result is average duration time of pull requests for a given repository for
+    # for the same date. The end result is average duration time of pull requests for a given repository for
     # different dates
     @staticmethod
     def handle_calculation_average_duration(repository):
@@ -85,6 +85,8 @@ class ImportHandler:
         avg = duration / (len(sorted_date_times) - 1)
         return avg
 
+    # responsible for counting events from the same event by a given timeunit
+    # prints the amount for each event type as a result
     @staticmethod
     def handle_process_events_by_offset():
         events = ImportHandler.handle_import_events()
@@ -105,6 +107,7 @@ class ImportHandler:
 
                     print(str.format("total events for {0} = {1}", e.event_type, events_by_offset_counter))
 
+    # responsible for grouping the same event types by each other and returns a list of the same event types
     @staticmethod
     def get_grouped_by_events(event_type, events):
         grouped_by_events = []
