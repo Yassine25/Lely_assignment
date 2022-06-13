@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.request import urlopen
 
 from PullRequest import PullRequest
@@ -78,13 +78,32 @@ class ImportHandler:
     def calculate_average_duration(date_times):
         sorted_date_times = sorted(date_times)
         duration = 0
-        avg = 0
         for i in range(0, len(sorted_date_times) - 1):
             start = int(round(datetime.strptime(str(sorted_date_times[i]), "%Y-%m-%d %H:%M:%S").timestamp()))
             end = int(round(datetime.strptime(str(sorted_date_times[i + 1]), "%Y-%m-%d %H:%M:%S").timestamp()))
             duration += end - start
         avg = duration / (len(sorted_date_times) - 1)
         return avg
+
+    @staticmethod
+    def handle_process_events_by_offset():
+        events = ImportHandler.handle_import_events()
+        processed_events = []
+
+        if events is not None:
+            for event in events:
+                if event.event_type not in processed_events:
+                    processed_events.append(event.event_type)
+                    grouped_by_events = ImportHandler.get_grouped_by_events(event.event_type, events)
+
+                    off_set = datetime.now() - timedelta(minutes=5)
+                    events_by_offset_counter = 0
+                    for e in grouped_by_events:
+                        date_time = datetime.strptime(event.date_time_created, '%Y-%m-%dT%H:%M:%Sz')
+                        if date_time > off_set:
+                            events_by_offset_counter += 1
+
+                    print(str.format("total events for {0} = {1}", e.event_type, events_by_offset_counter))
 
     @staticmethod
     def get_grouped_by_events(event_type, events):
@@ -95,7 +114,7 @@ class ImportHandler:
 
         return grouped_by_events
 
-    # return json data
+    # returns json data
     @staticmethod
     def get_json_data(url):
         try:
