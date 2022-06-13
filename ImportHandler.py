@@ -86,6 +86,15 @@ class ImportHandler:
         avg = duration / (len(sorted_date_times) - 1)
         return avg
 
+    @staticmethod
+    def get_grouped_by_events(event_type, events):
+        grouped_by_events = []
+        for event in events:
+            if event.event_type == event_type:
+                grouped_by_events.append(event)
+
+        return grouped_by_events
+
     # return json data
     @staticmethod
     def get_json_data(url):
