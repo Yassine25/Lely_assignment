@@ -1,1 +1,0 @@
-# Lely_assignment
