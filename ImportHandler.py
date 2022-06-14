@@ -39,7 +39,7 @@ class ImportHandler:
             if len(repository.pull_requests) > 1:
                 ImportHandler.handle_calculation_average_duration(repository)
             else:
-                print("no pull requests available for this repository")
+                print("zero or one pull requests available for this repository")
 
     # this method is part of the calculation of the average duration of pull requests
     # average duration of pull requests will be only calculated if there are more than one pull request
