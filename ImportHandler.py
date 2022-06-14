@@ -90,7 +90,7 @@ class ImportHandler:
     # responsible for counting events from the same event by a given timeunit
     # prints the amount for each event type as a result
     @staticmethod
-    def handle_process_events_by_offset():
+    def handle_process_events_by_offset(off_set):
         events = ImportHandler.handle_import_events()
         processed_events = []
 
@@ -100,7 +100,6 @@ class ImportHandler:
                     processed_events.append(event.event_type)
                     grouped_by_events = ImportHandler.get_grouped_by_events(event.event_type, events)
 
-                    off_set = datetime.now() - timedelta(minutes=5)
                     events_by_offset_counter = 0
                     for e in grouped_by_events:
                         date_time = datetime.strptime(event.date_time_created, '%Y-%m-%dT%H:%M:%Sz')
