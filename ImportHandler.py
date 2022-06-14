@@ -1,7 +1,7 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 from urllib.request import urlopen
-
+from Event import Event
 from PullRequest import PullRequest
 from Repository import Repository
 
@@ -39,11 +39,11 @@ class ImportHandler:
             if len(repository.pull_requests) > 1:
                 ImportHandler.handle_calculation_average_duration(repository)
             else:
-                print("zero or one pull requests available for this repository")
+                print("one or no pull requests available for this repository")
 
     # this method is part of the calculation of the average duration of pull requests
     # average duration of pull requests will be only calculated if there are more than one pull request
-    # for the same date. The end result is average duration time of pull requests for a given repository for
+    # for the same date. the end result is average duration time of pull requests for a given repository for
     # different dates
     @staticmethod
     def handle_calculation_average_duration(repository):
@@ -65,15 +65,13 @@ class ImportHandler:
                     date_times_counter += 1
                     avg_duration += ImportHandler.calculate_average_duration(date_times)
                     date_times.clear()
-            avg_duration = avg_duration / date_times_counter
+                    avg_duration = avg_duration / date_times_counter
             index += 1
 
         if (avg_duration / 60) > 3600:
-            print(str.format("avg duration for repository {0}, in hours = {1}").format(repository.name,
-                                                                                       avg_duration / 3600))
+            print(str("avg duration for repository {0}, in hours = {1}").format(repository.name, avg_duration / 3600))
         elif (avg_duration / 60) < 3600:
-            print(str.format("avg duration for repository {0}, in minutes = {1}").format(repository.name,
-                                                                                         avg_duration / 60))
+            print(str("avg duration for repository {0}, in minutes = {1}").format(repository.name, avg_duration / 60))
 
     # this method calculates the average duration of pull requests grouped by dates of the same date
     @staticmethod
@@ -84,8 +82,7 @@ class ImportHandler:
             start = int(round(datetime.strptime(str(sorted_date_times[i]), "%Y-%m-%d %H:%M:%S").timestamp()))
             end = int(round(datetime.strptime(str(sorted_date_times[i + 1]), "%Y-%m-%d %H:%M:%S").timestamp()))
             duration += end - start
-        avg = duration / (len(sorted_date_times) - 1)
-        return avg
+        return duration / (len(sorted_date_times) - 1)
 
     # responsible for counting events from the same event by a given timeunit
     # prints the amount for each event type as a result
@@ -108,6 +105,18 @@ class ImportHandler:
 
                     print(str.format("total events for {0} = {1}", e.event_type, events_by_offset_counter))
 
+    # returns events
+    @staticmethod
+    def handle_import_events():
+        events = []
+        url = "https://api.github.com/events"
+        if not ImportHandler.get_json_data(url) is None:
+            for data in ImportHandler.get_json_data(url):
+                events.append(Event(data['type'], data['id'], data['created_at']))
+            return events
+        else:
+            return None
+
     # responsible for grouping the same event types by each other and returns a list of the same event types
     @staticmethod
     def get_grouped_by_events(event_type, events):
@@ -118,7 +127,7 @@ class ImportHandler:
 
         return grouped_by_events
 
-    # returns json data
+    # return json data
     @staticmethod
     def get_json_data(url):
         try:
