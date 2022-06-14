@@ -4,6 +4,7 @@ class Repository:
         self.id = id
         self.name = name
         self.url = url
+        self.pull_requests = []
         self.display_repository()
 
     def display_repository(self):
